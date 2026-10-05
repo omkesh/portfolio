@@ -1,0 +1,75 @@
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import Header from "./components/Header";
+import Hero from "./components/Hero";
+import ScrollProgress from "./components/ScrollProgress";
+import BackToTop from "./components/BackToTop";
+import CursorTrail from "./components/CursorTrail";
+import Skills from "./sections/Skills";
+import Projects from "./sections/Projects";
+import Experience from "./sections/Experience";
+import Writing from "./sections/Writing";
+import Contact from "./sections/Contact";
+import useTheme from "./hooks/useTheme";
+import useActiveSection from "./hooks/useActiveSection";
+import { profile, siteMeta, socialLinks } from "./data/resumeData";
+
+const SECTION_IDS = ["about", "skills", "projects", "experience", "writing", "contact"];
+
+export default function App() {
+  const { t, i18n } = useTranslation();
+  const { theme, setTheme } = useTheme();
+  const activeSection = useActiveSection(SECTION_IDS);
+
+  const handleLangChange = useCallback(
+    (lang) => {
+      i18n.changeLanguage(lang);
+      document.documentElement.lang = lang;
+    },
+    [i18n]
+  );
+
+  return (
+    <>
+      <ScrollProgress />
+      <CursorTrail />
+      <Header
+        activeSection={activeSection}
+        currentTheme={theme}
+        onThemeToggle={setTheme}
+        currentLang={i18n.language}
+        onLangChange={handleLangChange}
+      />
+
+      <main>
+        <Hero
+          name={profile.name}
+          title={t("hero.title")}
+          experienceYears={profile.experienceYears}
+          location={profile.location}
+          company={profile.company}
+          profileImage={profile.profileImage}
+          profileImageMobile={profile.profileImageMobile}
+          socialLinks={socialLinks}
+        />
+        <Skills />
+        <Projects />
+        <Experience />
+        <Writing />
+        <Contact />
+      </main>
+
+      <footer className="border-t py-8" style={{ borderColor: "var(--border)" }}>
+        <div className="container-pf flex flex-wrap items-center justify-between gap-4 text-sm"
+          style={{ color: "var(--text-muted)" }}>
+          <span>
+            © {new Date().getFullYear()} {profile.name}. {t("footer.rights")}
+          </span>
+          <span>{siteMeta.builtWith}</span>
+        </div>
+      </footer>
+
+      <BackToTop />
+    </>
+  );
+}

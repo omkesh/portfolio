@@ -1,0 +1,658 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   THEME TOKENS — NOIR (black bg / white details, default)
+                 and NEWSPRINT (white bg / black details)
+   ============================================================ */
+:root,
+.theme-noir {
+  --bg: #000000;
+  --bg-soft: #0a0a0a;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.22);
+  --border-strong: rgba(255, 255, 255, 0.45);
+  --text: #ffffff;
+  --text-muted: #b3b3b3;
+  --accent: #ffffff;
+  --accent-2: #d4d4d4;
+  --accent-3: #a3a3a3;
+  --green: #ffffff;
+  --red: #ffffff;
+  --grad: linear-gradient(135deg, #ffffff, #bfbfbf 55%, #8c8c8c);
+  --grad-text: linear-gradient(90deg, #ffffff, #d4d4d4 55%, #a3a3a3);
+  --glow: 0 0 24px rgba(255, 255, 255, 0.2);
+  --glow-strong: 0 0 32px rgba(255, 255, 255, 0.28);
+  --card-bg: rgba(0, 0, 0, 0.85);
+  --nav-bg: rgba(0, 0, 0, 0.75);
+  --btn-fg: #000000;
+  --selection-bg: rgba(255, 255, 255, 0.9);
+  --selection-fg: #000000;
+}
+
+.theme-newsprint {
+  --bg: #ffffff;
+  --bg-soft: #f2f2f2;
+  --surface: rgba(0, 0, 0, 0.04);
+  --surface-hover: rgba(0, 0, 0, 0.08);
+  --border: rgba(0, 0, 0, 0.25);
+  --border-strong: rgba(0, 0, 0, 0.5);
+  --text: #000000;
+  --text-muted: #4d4d4d;
+  --accent: #000000;
+  --accent-2: #2b2b2b;
+  --accent-3: #5c5c5c;
+  --green: #000000;
+  --red: #000000;
+  --grad: linear-gradient(135deg, #1a1a1a, #4d4d4d 55%, #7a7a7a);
+  --grad-text: linear-gradient(90deg, #000000, #333333 55%, #666666);
+  --glow: 0 0 24px rgba(0, 0, 0, 0.15);
+  --glow-strong: 0 0 32px rgba(0, 0, 0, 0.25);
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --nav-bg: rgba(255, 255, 255, 0.8);
+  --btn-fg: #ffffff;
+  --selection-bg: rgba(0, 0, 0, 0.9);
+  --selection-fg: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Courier Prime", "Courier New", monospace;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Vintage typewriter headings */
+h1, h2, h3, h4, h5, h6,
+.section-title,
+.btn {
+  font-family: "Special Elite", "Courier New", monospace;
+  letter-spacing: 0.02em;
+}
+
+/* Ambient glows */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+body::before {
+  width: 560px; height: 560px;
+  background: radial-gradient(circle, var(--accent-2), transparent 70%);
+  top: -180px; right: -120px;
+}
+body::after {
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+  bottom: -160px; left: -140px;
+}
+
+::selection { background: #e8a000; color: #111111; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   REUSABLE CLASSES
+   ============================================================ */
+.container-pf {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Full-width section container matching the About (hero) padding:
+   grows with screen size so all sections align with the hero text */
+.section-container-pf {
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@media (min-width: 640px) {
+  .section-container-pf {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-container-pf {
+    padding-left: 96px;
+    padding-right: 96px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section-container-pf {
+    padding-left: 240px;
+    padding-right: 240px;
+  }
+}
+
+.section-pf { padding: 48px 0; }
+
+/* Get In Touch form — placeholders clearly visible */
+#contact input::placeholder,
+#contact textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+/* ============================================================
+   HERO PHOTO — B&W treatment per theme
+   ============================================================ */
+.hero-photo-img {
+  filter: grayscale(1) contrast(1.1) drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6));
+}
+
+.theme-newsprint .hero-photo-img {
+  filter: grayscale(1) contrast(1.05) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+}
+
+/* ============================================================
+   NATIVE CURSOR OVERRIDES
+   Arrow hidden (circle replaces it); hand on links/buttons,
+   text caret on form inputs.
+   ============================================================ */
+html,
+body,
+* {
+  cursor: none;
+}
+
+a,
+button,
+[role="button"],
+summary,
+label,
+.nav-link {
+  cursor: pointer !important;
+}
+
+/* Anything inside an interactive element also gets the hand */
+a *,
+button *,
+[role="button"] *,
+summary *,
+label *,
+.nav-link * {
+  cursor: pointer !important;
+}
+
+input,
+textarea,
+select {
+  cursor: text !important;
+}
+
+/* ============================================================
+   NEON CURSOR TRAIL — hollow star cursor + magic star sparkles
+   ============================================================ */
+.cursor-star {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  will-change: transform;
+  filter: drop-shadow(0 0 4px rgba(255, 200, 0, 0.5));
+}
+
+.cursor-star.cursor-star-active {
+  opacity: 1;
+}
+
+.cursor-sparkle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9998;
+  pointer-events: none;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 0 3px rgba(232, 160, 0, 0.6));
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-star,
+  .cursor-sparkle { display: none; }
+
+  /* Restore native cursors on touch devices */
+  html,
+  body,
+  * {
+    cursor: auto;
+  }
+
+  a,
+  button,
+  [role="button"],
+  summary,
+  label {
+    cursor: pointer !important;
+  }
+
+  input,
+  textarea,
+  select {
+    cursor: text !important;
+  }
+}
+
+/* Hero social icon buttons — brand color on icon hover only */
+.social-icon-btn {
+  border-radius: 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 22px;
+  font-weight: 700;
+  transition: transform 0.25s ease;
+}
+
+.social-icon-btn:hover {
+  transform: translateY(-5px) scale(1.08);
+}
+
+.social-icon-btn:hover .social-icon-glyph {
+  color: var(--brand-color, var(--text));
+}
+
+.social-icon-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--text);
+  transition: color 0.25s ease;
+}
+
+.social-icon-glyph svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-icon-btn,
+  .social-icon-glyph {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   SKILL BADGE — static bar on load; on hover the fill animates
+   0 → pct with a star at the tip and turmeric sparkles behind.
+   ============================================================ */
+.skill-bar-track {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--grad);
+}
+
+/* On hover: restart fill animation from 0 to the skill's pct */
+.skill-badge:hover .skill-bar-fill {
+  animation: skill-fill-grow 1.1s cubic-bezier(0.25, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes skill-fill-grow {
+  from { width: 0; }
+  to { width: var(--pct); }
+}
+
+/* Star rides the tip of the growing fill — travels from 0 to the
+   pct mark in sync with the bar, centered on the bar line */
+.skill-bar-star {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 27px;
+  height: 27px;
+  margin: -13.5px 0 0 -13.5px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  filter: drop-shadow(0 0 5px rgba(232, 160, 0, 0.8));
+  pointer-events: none;
+  z-index: 2;
+}
+
+.skill-badge:hover .skill-bar-star {
+  opacity: 1;
+  animation: skill-star-travel 1.1s cubic-bezier(0.25, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes skill-star-travel {
+  0% {
+    left: 0%;
+    transform: scale(0.6);
+  }
+  10% {
+    transform: scale(1);
+  }
+  100% {
+    /* Star rides right at the fill tip, leading the progress */
+    left: calc(var(--pct) + 4px);
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-badge:hover .skill-bar-fill {
+    animation: none;
+  }
+
+  .skill-badge:hover .skill-bar-star {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Tech stack logos — black & white by default, brand color on hover */
+.tech-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.tech-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0.25);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.tech-icon-glyph {
+  filter: grayscale(1) brightness(0.25);
+  transition: filter 0.3s ease, transform 0.3s ease;
+  font-size: 18px;
+}
+
+.skill-badge:hover .tech-icon img,
+.skill-badge:hover .tech-icon-glyph {
+  filter: none;
+  transform: scale(1.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-icon img,
+  .tech-icon-glyph {
+    transition: none;
+  }
+}
+
+/* Top menu links — turmeric yellow underline slides in on hover */
+.nav-link {
+  position: relative;
+  padding-bottom: 4px;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: #e8a000;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width 0.25s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Courier Prime", monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.section-label::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--accent);
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  color: var(--text-muted);
+  max-width: 560px;
+  margin-bottom: 48px;
+}
+
+.grad-text {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.glass-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--glow-strong);
+}
+
+.btn {
+  --zz-depth: 6px;   /* zigzag tooth height */
+  --zz-border: 2px;  /* border thickness */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  transition: transform 0.2s, color 0.2s;
+}
+
+/* Snake zigzag outline: ::before draws the full zigzag shape in text color,
+   ::after punches the interior back out with the page color, leaving a
+   zigzag "border" of --zz-border thickness. */
+.btn::before,
+.btn-primary::before,
+.btn-ghost::before,
+.btn::after,
+.btn-primary::after,
+.btn-ghost::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--text);
+  clip-path: polygon(
+    0% 0%, 2.5% var(--zz-depth), 5% 0%, 7.5% var(--zz-depth), 10% 0%,
+    12.5% var(--zz-depth), 15% 0%, 17.5% var(--zz-depth), 20% 0%,
+    22.5% var(--zz-depth), 25% 0%, 27.5% var(--zz-depth), 30% 0%,
+    32.5% var(--zz-depth), 35% 0%, 37.5% var(--zz-depth), 40% 0%,
+    42.5% var(--zz-depth), 45% 0%, 47.5% var(--zz-depth), 50% 0%,
+    52.5% var(--zz-depth), 55% 0%, 57.5% var(--zz-depth), 60% 0%,
+    62.5% var(--zz-depth), 65% 0%, 67.5% var(--zz-depth), 70% 0%,
+    72.5% var(--zz-depth), 75% 0%, 77.5% var(--zz-depth), 80% 0%,
+    82.5% var(--zz-depth), 85% 0%, 87.5% var(--zz-depth), 90% 0%,
+    92.5% var(--zz-depth), 95% 0%, 97.5% var(--zz-depth), 100% 0%,
+    100% 100%, 97.5% calc(100% - var(--zz-depth)), 95% 100%,
+    92.5% calc(100% - var(--zz-depth)), 90% 100%,
+    87.5% calc(100% - var(--zz-depth)), 85% 100%,
+    82.5% calc(100% - var(--zz-depth)), 80% 100%,
+    77.5% calc(100% - var(--zz-depth)), 75% 100%,
+    72.5% calc(100% - var(--zz-depth)), 70% 100%,
+    67.5% calc(100% - var(--zz-depth)), 65% 100%,
+    62.5% calc(100% - var(--zz-depth)), 60% 100%,
+    57.5% calc(100% - var(--zz-depth)), 55% 100%,
+    52.5% calc(100% - var(--zz-depth)), 50% 100%,
+    47.5% calc(100% - var(--zz-depth)), 45% 100%,
+    42.5% calc(100% - var(--zz-depth)), 40% 100%,
+    37.5% calc(100% - var(--zz-depth)), 35% 100%,
+    32.5% calc(100% - var(--zz-depth)), 30% 100%,
+    27.5% calc(100% - var(--zz-depth)), 25% 100%,
+    22.5% calc(100% - var(--zz-depth)), 20% 100%,
+    17.5% calc(100% - var(--zz-depth)), 15% 100%,
+    12.5% calc(100% - var(--zz-depth)), 10% 100%,
+    7.5% calc(100% - var(--zz-depth)), 5% 100%,
+    2.5% calc(100% - var(--zz-depth)), 0% 100%
+  );
+}
+
+.btn::after,
+.btn-primary::after,
+.btn-ghost::after {
+  inset: var(--zz-border);
+  background: var(--bg);
+}
+
+.btn-primary {
+  --zz-border: 3px;
+  background: transparent;
+  color: var(--text);
+  box-shadow: none;
+}
+.btn-primary:hover { transform: translateY(-2px); filter: none; }
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text);
+  box-shadow: none;
+}
+.btn-ghost:hover {
+  background: transparent;
+  border-color: transparent;
+  transform: translateY(-2px);
+}
+
+/* Hover: invert — zigzag interior fills with text color */
+.btn:hover,
+.btn-primary:hover,
+.btn-ghost:hover {
+  color: var(--bg);
+}
+.btn:hover::after,
+.btn-primary:hover::after,
+.btn-ghost:hover::after {
+  background: var(--text);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.chip {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.chip:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--glow);
+}
+
+.tag {
+  font-family: "Courier Prime", monospace;
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--accent);
+}
+
+/* ============================================================
+   RESPONSIVE & A11Y
+   ============================================================ */
+@media (max-width: 640px) {
+  .section-pf { padding: 32px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
