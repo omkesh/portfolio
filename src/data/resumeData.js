@@ -21,10 +21,10 @@ export const profile = {
     university: "Shivaji University, Kolhapur",
     year: 2015,
   },
-  profileImage: "/assets/omkesh-kendre-bg.png",
+  profileImage: "./assets/omkesh-kendre-bg.png",
   // Optional: a different (face-crop) image used on small screens.
   // Leave "" to reuse profileImage everywhere.
-  profileImageMobile: "/assets/omkesh-kendre-face-bg.png",
+  profileImageMobile: "./assets/omkesh-kendre-face-bg.png",
   profileImageFallback:
     "https://media.licdn.com/dms/image/v2/D4D16AQFWJLd87K8QuA/profile-displaybackgroundimage-shrink_200_800/profile-displaybackgroundimage-shrink_200_800/0/1673873494890",
 };
